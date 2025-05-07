@@ -36,16 +36,14 @@ function setParkIntro(data) {
 };
 
 function mediaCardTemplate(info) {
-    return `
-    <dive class="media-card">
-        <a href="${info.link}">
-            <img src="${info.image}" alt="${info.altText}">
-        </a>
-        <h3><a href="${info.link}">${info.name}</a></h3>
-        <p>${info.description}</p>
-    </div>
-    `;
-}
+    return `<div class="media-card">
+    <a href="${info.link}">
+    <img src="${info.image}" alt="${info.name}" class="media-card__img">
+    <h3 class="media-card__title">${info.name}</h3>
+    </a>
+   <p>${info.description}</p>
+     </div>`;
+  }
 
 const parkInfoLinks = [
     {
@@ -76,10 +74,40 @@ function setParkInfoLinks(data) {
     .join("");
 };
 
+function getMailingAddress(addresses) {
+    const mailing = addresses.find((address) => address.type === "Mailing");
+    return mailing;
+  }
+  function getVoicePhone(numbers) {
+    const voice = numbers.find((number) => number.type === "Voice");
+    return voice.phoneNumber;
+  }
+  function footerTemplate(info) {
+    const mailing = getMailingAddress(info.addresses);
+    const voice = getVoicePhone(info.contacts.phoneNumbers);
+  
+    return `<section class="contact">
+    <h3>Contact Info</h3>
+    <h4>Mailing Address:</h4>
+    <div><p>${mailing.line1}<p>
+    <p>${mailing.city}, ${mailing.stateCode} ${mailing.postalCode}</p></div>
+    <h4>Phone:</h4>
+    <p>${voice}</p>
+  </section>
+  `;
+  }
+
+
+function setFooter(data) {
+    const footerEl = document.querySelector("#park-footer");
+    footerEl.innerHTML = footerTemplate(data);
+  }
+
 
 setHeaderInfo(parkData);
 setParkIntro(parkData);
-setParkInfoLinks(parkData);
+setParkInfoLinks(parkData)
+setFooter(parkData);
 
 
 

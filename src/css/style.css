@@ -310,21 +310,25 @@ svg {
 
 }
 
-.info  > *{
-margin: 0 2%;
+.info {
+margin: 0 auto;
 display:flex;
 flex-wrap: wrap;
 gap: 20px;
 justify-content: space-between;
-/* width:30%; */
+max-width:1200px;
 }
 
 .media-card {
-  display:flex;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-
+  align-items: center; 
+  text-align: center; 
+  flex: 1 1 calc(33.333% - 20px);
+  box-sizing: border-box; 
+  /* max-width: 300px;  */
+  padding: 10px; 
+  background-color: var(--bs-light); 
 }
 
 .media-card img {
@@ -334,11 +338,19 @@ justify-content: space-between;
 
 .media-card h3 {
   font-size: 1.2rem;
-  margin: 10px 0 5px; /* Add spacing above and below the heading */
+  margin: 10px 0 5px; 
 }
 
 .media-card p {
   font-size: 1rem;
-  margin: 0; /* Remove default margins */
-  color: var(--bs-grey-6); /* Optional: Add a lighter text color */
+  margin: 0; 
+  color: var(--bs-grey-6); 
 }
+
+/* .info {
+  border: 2px dashed red; 
+}
+
+.media-card {
+  border: 2px solid blue;
+} */
