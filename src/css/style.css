@@ -99,6 +99,7 @@ body {
   font-family: var(--bs-body-font-family);
   font-size: 18px;
   margin: 0;
+  
 }
 
 a:link,
@@ -302,4 +303,42 @@ svg {
   width: 24px;
   height: 24px;
   background-color: transparent;
+}
+
+.intro {
+  margin: 0 2%;
+
+}
+
+.info  > *{
+margin: 0 2%;
+display:flex;
+flex-wrap: wrap;
+gap: 20px;
+justify-content: space-between;
+/* width:30%; */
+}
+
+.media-card {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+}
+
+.media-card img {
+  width:100%;
+  height:auto;
+}
+
+.media-card h3 {
+  font-size: 1.2rem;
+  margin: 10px 0 5px; /* Add spacing above and below the heading */
+}
+
+.media-card p {
+  font-size: 1rem;
+  margin: 0; /* Remove default margins */
+  color: var(--bs-grey-6); /* Optional: Add a lighter text color */
 }
