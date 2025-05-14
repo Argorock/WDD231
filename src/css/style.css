@@ -347,10 +347,14 @@ max-width:1200px;
   color: var(--bs-grey-6); 
 }
 
-/* .info {
-  border: 2px dashed red; 
+.contact h3 {
+  display: block;
+  justify-content: center;
+
 }
 
-.media-card {
-  border: 2px solid blue;
-} */
+.contact h4, div {
+  display: inline-flex;
+  justify-content: space-around;
+
+}
