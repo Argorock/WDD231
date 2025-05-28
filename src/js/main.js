@@ -1,131 +1,29 @@
-import { getParkData } from "./parkService.mjs";
-import { VITE_NPS_API_KEY } from "./envLoader.mjs";
-
-const baseUrl = "https://developer.nps.gov/api/v1/";
-const apiKey = VITE_NPS_API_KEY;
-
-async function getJson(url) {
-  const options = {
-    method: "GET",
-    headers: {
-      "X-Api-Key": apiKey,
-    },
-  };
-  let data = {};
-  const response = await fetch(baseUrl + url, options);
-  if (response.ok) {
-    data = await response.json();
-  } else {
-    throw new Error("response not ok");
-  }
-  return data;
-}
-
-export async function getParkData() {
-  const parkData = await getJson("parks?parkCode=yell");
-  return parkData.data[0];
-}
-
-function setHeaderInfo(data) {
-    const disclaimer = document.querySelector(".disclaimer > a");
-    disclaimer.href = data.url;
-    disclaimer.textContent = data.fullName;
-
-    document.querySelector("head > title").textContent = data.fullName;
-
-    const heroImage = document.querySelector(".hero-banner img");
-    heroImage.src = data.images[0].url;
-    heroImage.alt = data.images[0].altText;
-
-
-    const sectionHeading = document.querySelector(".global-nav__section-heading");
-    if (sectionHeading) sectionHeading.remove();
-
-    const navList = document.querySelector(".global-nav__list");
-    if (navList) navList.remove();
-
-    const globalNav = document.querySelector(".global-nav");
-    if (globalNav) globalNav.remove();
-}
-
+import "../css/style.css"; 
+import "../css/home.css";
+import { getParkData, getInfoLinks } from "./parkService.mjs";
+import setHeaderFooter from "./setHeaderFooter.mjs";
+import { mediaCardTemplate } from "./templates.mjs";
 
 function setParkIntro(data) {
-    const introSection = document.querySelector(".intro")
-    introSection.innerHTML = `
-    <h2>${data.fullName}</h2>
-    <p>${data.description}</p>
-    `;
-};
-
-function mediaCardTemplate(info) {
-    return `<div class="media-card">
-    <a href="${info.link}">
-    <img src="${info.image}" alt="${info.name}" class="media-card__img">
-    <h3 class="media-card__title">${info.name}</h3>
-    </a>
-   <p>${info.description}</p>
-     </div>`;
-  }
-
-function setParkInfoLinks(data) {
-  const parkInfoLinks = [
-    {
-      name: "Current Conditions &#x203A;",
-      link: "conditions.html",
-      image: data.images[2]?.url, 
-      description: "See what conditions to expect in the park before leaving on your trip!",
-    },
-    {
-      name: "Fees and Passes &#x203A;",
-      link: "fees.html",
-      image: data.images[3]?.url,
-      description: "Learn about the fees and passes that are available.",
-    },
-    {
-      name: "Visitor Centers &#x203A;",
-      link: "visitor_centers.html",
-      image: data.images[9]?.url,
-      description: "Learn about the visitor centers in the park.",
-    },
-  ];
-
-  const infoSection = document.querySelector(".info");
-  infoSection.innerHTML = parkInfoLinks
-    .map((link) => mediaCardTemplate(link))
-    .join("");
+  const introEl = document.querySelector(".intro");
+  introEl.innerHTML = `<h1>${data.fullName}</h1>
+  <p>${data.description}</p>`;
 }
 
-function getMailingAddress(addresses) {
-    const mailing = addresses.find((address) => address.type === "Mailing");
-    return mailing;
-  }
-  function getVoicePhone(numbers) {
-    const voice = numbers.find((number) => number.type === "Voice");
-    return voice.phoneNumber;
-  }
-  function footerTemplate(info) {
-    const mailing = getMailingAddress(info.addresses);
-    const voice = getVoicePhone(info.contacts.phoneNumbers);
-  
-    return `<section class="contact">
-    <h3>Contact Info</h3>
-    <h4>Mailing Address:</h4>
-    <div><p>${mailing.line1}<p>
-    <p>${mailing.city}, ${mailing.stateCode} ${mailing.postalCode}</p></div>
-    <h4>Phone:</h4>
-    <p>${voice}</p>
-  </section>
-  `;
-  }
+function setParkInfoLinks(data) {
+  const infoEl = document.querySelector(".info");
 
+  const html = data.map(mediaCardTemplate);
 
-function setFooter(data) {
-    const footerEl = document.querySelector("#park-footer");
-    footerEl.innerHTML = footerTemplate(data);
-  }
+  infoEl.insertAdjacentHTML("afterbegin", html.join(""));
+}
 
+async function init() {
+  const parkData = await getParkData();
+  const links = getInfoLinks(parkData.images);
+  setHeaderFooter(parkData);
+  setParkIntro(parkData);
+  setParkInfoLinks(links);
+}
 
 init();
-
-
-
